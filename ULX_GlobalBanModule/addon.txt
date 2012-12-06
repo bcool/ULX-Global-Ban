@@ -1,0 +1,8 @@
+AddonInfo {
+  name "ULX GlobalBan Module"
+  version "0.01"
+  up_date "06/12/2012"
+  author_name "Adobe Ninja & NigNog"
+  author_email ""
+  override "1"
+}
