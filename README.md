@@ -20,14 +20,8 @@ Each time your server is started, the hostname is automagicly updated in the MyS
 
 PLANED/TODO
 ==============
-+  Add
--  Remove
-*  Fix / Changed
-
-
-+Ban removal.
-+Ban listing in the xgui menus.
-*Cleanup file layout.
+[ADD] 		Ban removal.
+[ADD] 		Ban listing in the xgui menus.
 
 INSTALLATION
 ==============
