@@ -20,18 +20,18 @@ Each time your server is started, the hostname is automagicly updated in the MyS
 
 PLANED/TODO
 ==============
-*Nothing  </ br>
+* Nothing
 
 CHANGELOG
 ==============
-[ADD] 	Ban removal. </ br>
-[ADD]	Ban Modification. </ br>
-[ADD] 	Ban listing in the xgui menus. </ br>
-[ADD]	Ban sync, your bans defaulty sync with the MySQL DB every 30 seconds. </ br>
-[ADD]	Config file with a small amount of configs for extra control. </ br>
-[ADD]	Limited GateKeeper functionality. </ br>
-[FIX]	Permanently Banned users could still get through. </ br>
-[CHG]	SQL Table Structure to incorporate all ULX ban details. </ br>
+* [ADD] 	Ban removal.
+* [ADD]		Ban Modification.
+* [ADD] 	Ban listing in the xgui menus.
+* [ADD]		Ban sync, your bans defaulty sync with the MySQL DB every 30 seconds.
+* [ADD]		Config file with a small amount of configs for extra control.
+* [ADD]		Limited GateKeeper functionality.
+* [FIX]		Permanently Banned users could still get through.
+* [CHG]		SQL Table Structure to incorporate all ULX ban details.
 
 INSTALLATION
 ==============
