@@ -23,5 +23,5 @@ GB_PermaMessage			= "You are permanently banned from this server!";
 
 --Should we use a timer to Refresh the ban list?
 --How long should the refresh timer be? || (Each Ban / UnBan / Modification - Refreshes the BanList anyway)
-GB_RefreshTimer 		= true; -- false = No | true = Yes (DEF=false)
+GB_RefreshTimer 		= true; -- false = No | true = Yes (DEF=true)
 GB_RefreshTime			= 30; -- Time in seconds DEF=30
