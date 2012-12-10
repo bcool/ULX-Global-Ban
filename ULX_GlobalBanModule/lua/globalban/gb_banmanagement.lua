@@ -105,8 +105,7 @@ end
 
 //Refreshes the ban List
 function ULib.refreshBans()
-	print("ULib.refreshBans()")
-	
+
 	--Use their tables ;)
 	ULib.bans = nil
 	ULib.bans = {}
@@ -132,6 +131,7 @@ function ULib.refreshBans()
 	end
 	BanList.onError = function() end
 	BanList:start()
+	
 end
 //Refresh on Script Load -- Otherwise has issues
 ULib.refreshBans()

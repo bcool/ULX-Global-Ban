@@ -23,9 +23,7 @@ local function manageIncomingConnections ( Name, Pass, SteamID, IP )
 		local row = data[1];
 		if (#AuthQuery:getData() == 1) then
 			local bantime = tonumber(row['Length']);
-			print("Banned Mudafuker");
 			if bantime >= curTime then
-				print("BanTime >= curTime")
 				local timeLeft = bantime - curTime;
 				local Minutes = math.floor(timeLeft / 60);
 				local Seconds = timeLeft - (Minutes * 60);
@@ -35,16 +33,12 @@ local function manageIncomingConnections ( Name, Pass, SteamID, IP )
 				local Hours = Hours - (Days * 24);
 				
 				if (Minutes == 0 && Hours == 0 && Days == 0) then
-					print("Seconds")
 					return {false, "Banned. Lifted In: " .. Seconds + 1 .. " Seconds"};
 				elseif (Hours == 0 && Days == 0) then
-					print("Minutes")
 					return {false, "Banned. Lifted In: " .. Minutes + 1 .. " Minutes"};
 				elseif (Days == 0) then
-					print("Hours")
 					return {false, "Banned. Lifted In: " .. Hours + 1 .. " Hours"};
 				else
-					print("Days / Years")
 					return {false, "Banned. Lifted In: " .. Days + 1 .. " Days"};
 				end
 			end
