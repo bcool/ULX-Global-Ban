@@ -65,7 +65,7 @@ function GB_InsertBan(steamid, name, BanLength, AdminName, AdminSteam,reason)
 		print('[ULX GB] (AddBanQuery) - Error: ', err);
 	end
 	AddBanQuery:start()
-		
+
 	-- Regardless of outcome Kick player From Server
 	RunConsoleCommand('kickid',steamid,"You've been banned from the server.");
 end
