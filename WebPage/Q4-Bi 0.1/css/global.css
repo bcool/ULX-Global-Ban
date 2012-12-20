@@ -1,0 +1,114 @@
+    body,td,th {
+        color: #FFF
+    }
+    body {
+        background-color: #000;
+        background-image: url(img/bg.png);
+        background-repeat: repeat-x;
+        margin-left: 0px;
+        margin-top: 0px;
+        margin-right: 0px;
+        margin-bottom: 0px;
+    
+    }
+    .container {
+        padding: 0px;
+        height: auto;
+        width: 1050px;
+        border-top-style: none;
+        border-right-style: none;
+        border-bottom-style: none;
+        border-left-style: none;
+        margin-top: 0px;
+        margin-right: auto;
+        margin-bottom: 0px;
+        margin-left: auto;
+    }
+    .content {
+        padding: 0px;
+        float: left;
+        height: auto;
+        width: 1050px;
+        border-top-style: none;
+        border-right-style: none;
+        border-bottom-style: none;
+        border-left-style: none;
+        margin-top: 12px;
+        margin-right: 0px;
+        margin-bottom: 0px;
+        margin-left: 0px;
+    }
+    .status {
+        padding: 6px;
+        float: left;
+        height: auto;
+        width: 1050px;
+        margin-top: 0px;
+        margin-right: 0px;
+        margin-bottom: 6px;
+        margin-left: 0px;
+        border: 1px solid #333;
+        background-image: url(img/listbg.png);
+        background-repeat: repeat;
+    }
+    .left {
+        margin: 0px;
+        padding: 0px;
+        color: #EEE;
+        font-weight: bold;
+    }
+    .Online {
+        margin: 0px;
+        padding: 0px;
+        float: right;
+        height: auto;
+        width: 160px;
+        border-top-style: none;
+        border-right-style: none;
+        border-bottom-style: none;
+        border-left-style: none;
+        color: #0C3;
+        font-weight: bold;
+    }
+    .Offline {
+        margin: 0px;
+        padding: 0px;
+        float: right;
+        height: auto;
+        width: 160px;
+        border-top-style: none;
+        border-right-style: none;
+        border-bottom-style: none;
+        border-left-style: none;
+        color: #F00;
+        font-weight: bold;
+    }
+    .header {
+        background-image: url(img/logo.png);
+        background-repeat: no-repeat;
+        margin: 0px;
+        padding: 0px;
+        float: left;
+        height: 75px;
+        width: 1050px;
+        border-top-style: none;
+        border-right-style: none;
+        border-bottom-style: none;
+        border-left-style: none;
+    }
+    pull-right {
+      float: right;
+    }
+
+#content-title
+{
+	font-size: 22px;
+	color: #0079BF;
+	margin-top:10px;		
+}
+#topic-title
+{
+	font-size: 18px;
+	color: #0079BF;
+	margin-top:10px;		
+}
