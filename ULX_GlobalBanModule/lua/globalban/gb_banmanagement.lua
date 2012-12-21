@@ -129,7 +129,9 @@ function ULib.refreshBans()
 			xgui.addData( {}, "bans", t ) -- This will error out on startup (Most Times, GMod 13's Addon Loading is fucked), but that's fine, all ban data gets loaded already
 		end
 	end
-	BanList.onError = function() end
+	BanList.onError = function(err) 
+		print('[ULX GB] (BanList) - Error: ', err);
+	end
 	BanList:start()
 	
 end

@@ -40,7 +40,7 @@ connectToDatabase()
 //Keep the MySQL Database Open and Connected.
 local function DbCheck()
 	if (ULX_DB:status() != mysqloo.DATABASE_CONNECTED) then
-		ULX_DB = mysqloo.connect(DATABASE_HOST, DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_NAME, DATABASE_PORT)
+		ULX_DB = mysqloo.connect(GB_DATABASE_HOST, GB_DATABASE_USERNAME, GB_DATABASE_PASSWORD, GB_DATABASE_NAME, GB_DATABASE_PORT)
 		print('[ULX GB] - Database Connection Restarted' )
 	end
 end
