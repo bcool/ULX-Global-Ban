@@ -57,7 +57,7 @@ end
 
 function GB_InsertBan(steamid, name, BanLength, AdminName, AdminSteam,reason)
 	--Insert Ban
-	local AddBanQuery = ULX_DB:query("INSERT INTO bans VALUES ('','"..steamid.."','"..name.."','"..BanLength.."','"..os.time().."','"..AdminName.."','"..AdminSteam.."','"..reason.."','"..GB_SERVERID.."','','"..os.time().."');");
+	local AddBanQuery = ULX_DB:query("INSERT INTO bans VALUES ('','"..steamid.."','"..GB_Escape(name).."','"..BanLength.."','"..os.time().."','"..GB_Escape(AdminName).."','"..AdminSteam.."','"..GB_Escape(reason).."','"..GB_SERVERID.."','','"..os.time().."');");
 	AddBanQuery.onSuccess = function()
 		print("[ULX GB] - Ban Added!");
 	end
@@ -72,7 +72,7 @@ end
 
 function GB_ModifyBan(BanLength, reason, time, AdminName, steamid)
 	--Send ban update to the Database
-	local UpdateBanQuery = ULX_DB:query("UPDATE bans SET Length='".. BanLength .."', Reason='".. reason .."', MTime='".. time .."', MAdmin='".. AdminName .."' WHERE OSteamID='".. steamid .."';");
+	local UpdateBanQuery = ULX_DB:query("UPDATE bans SET Length='".. BanLength .."', Reason='".. reason .."', MTime='".. time .."', MAdmin='".. GB_Escape(AdminName) .."' WHERE OSteamID='".. steamid .."';");
 	UpdateBanQuery.onSuccess = function()
 		print("[ULX GB] - Ban Modified!");
 	end

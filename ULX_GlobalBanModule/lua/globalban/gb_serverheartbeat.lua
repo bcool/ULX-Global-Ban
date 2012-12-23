@@ -8,7 +8,7 @@ GB_SERVERID = 0
 
 function GB_QueryDatabaseForServer()
 	--Gather Identification Infos
-	local HostName = GetHostName();
+	local HostName = GB_Escape(GetHostName());
 	local IPAddress = GetConVarString("ip");
 	local HostPort = GetConVarString("hostport");
 	
@@ -28,14 +28,14 @@ function GB_QueryDatabaseForServer()
 			GB_InsertNewServer()
 		end 
 	end
-	HeartbeatQuery.onError = function() print ('[ULX GB] (HeartbeatQuery) - Error: ',err) end
+	HeartbeatQuery.onError = function() print ('[ULX GB] (HeartbeatQuery) - Error: ',HeartbeatQuery.error()) end
 	HeartbeatQuery:start()
 	
 end
 
 function GB_UpdateServerName() 
 	--Gather Identification Infos
-	local HostName = GetHostName();
+	local HostName = GB_Escape(GetHostName());
 	
 	local UpdateName = ULX_DB:query(" UPDATE servers SET HostName='".. HostName .."' WHERE ServerID='"..GB_SERVERID.."' ");
 	UpdateName.onSuccess = function()
@@ -50,7 +50,7 @@ end
 
 function GB_InsertNewServer()
 	--Gather Indentification Infos
-	local HostName = GetHostName();
+	local HostName = GB_Escape(GetHostName());
 	local IPAddress = GetConVarString("ip");
 	local HostPort = GetConVarString("hostport");
 
