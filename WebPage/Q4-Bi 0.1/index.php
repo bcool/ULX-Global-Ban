@@ -7,16 +7,14 @@
 	
 	// Source server Query GET
 	require __DIR__ . '/SourceQuery/SourceQuery.class.php';
+	//require_once ('SourceQuery/SourceQuery.class.php'); // If you get and error reguarding this line, comment out the line above and use this one :)
 	
 	// Config to your database - Edit this!
 	$dbhost		= '127.0.0.1';			// Server IP/Domain of where the datab-base resides.
 	$dbdatabase	= 'ulxbans';			// Data-base Name.
 	$dbuser		= 'root';				// Username.
 	$dbpassword	= '';					// Password.
-	$webname	= 'Ban-Hammer.net'	// Title of Community/Server/Website/Domain, pick one.
-		
-	// Variables
-	$todaysdate = time();
+	$webname	= 'Ban-Hammer.net'		// Title of Community/Server/Website/Domain, pick one.
 ?>
 <?php
 	// MySQL Connect/Query
@@ -26,14 +24,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title><?php echo $webname ?> - Global Bans</title> 
-    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css">
-	<link rel="stylesheet" href="css/global.css">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta HTTP-EQUIV="refresh" CONTENT="70" />
+		<meta name="keywords" content="ulx, global, ban, banning, bans, gmod, garrys, mod, addon, ulib">
+		<title><?php echo $webname ?> - Global Bans</title> 
+		<link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css">
+		<link rel="stylesheet" href="css/global.css">
+		<script type="text/javascript">
+		var currenttime = '<? print date("h:i:s a j M Y", time())?>'
+		var montharray=new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
+		var serverdate=new Date(currenttime)
+		function padlength(what){
+			var output=(what.toString().length==1)? "0"+what : what
+			return output
+		}
+		function displaytime(){
+			serverdate.setSeconds(serverdate.getSeconds()+1)
+			var timestring=padlength(serverdate.getHours())+":"+padlength(serverdate.getMinutes())+":"+padlength(serverdate.getSeconds())
+			var datestring=montharray[serverdate.getMonth()]+" "+padlength(serverdate.getDate())+", "+serverdate.getFullYear()
+			document.getElementById("servertime").innerHTML=datestring+" "+timestring
+		}
+			window.onload=function(){
+			setInterval("displaytime()", 1000)
+		}
+		</script>
     </head>
 	<body>
         <div class="container">
             <div class="header"></div>
+			<div id="content-title" class="pull-right"><span id="servertime"></div>
             <div id="content-title"><?php echo $webname ?> - Global Bans List</div>
             <div class="content">
             	<div id="topic-title">Server List</div>
@@ -159,7 +178,7 @@
                         <td width="185">
 							<?php  if ($row['Length'] == '0')
 								{
-									echo "Not Applicable.";	
+									echo "<em>Not Applicable.</em>";	
 								}
 								elseif($row['Length'] < time())
 								{
@@ -171,7 +190,22 @@
 								}
 							?>
 						</td>
-                        <td width="169"><?php echo $row['AName']; ?></td>
+						<?php
+							// Steam ID Converter
+							$steamid = $row['ASteamID'];						
+							$steam_id=strtolower($steamid);
+							if (substr($steam_id,0,7)=='steam_0') {
+								$tmp=explode(':',$steam_id);
+							}
+							if ((count($tmp)==3) && is_numeric($tmp[1]) && is_numeric($tmp[2])){
+								$steamidCalc=($tmp[2]*2)+$tmp[1]; 
+								$calckey=1197960265728;
+								$pre=7656;	
+								$steamcid=$steamidCalc+$calckey;
+								$profile="http://steamcommunity.com/profiles/$pre" . number_format($steamcid,0,"","");
+							};
+						?>
+                        <td width="169"><a href="<?php echo $profile; ?>"><?php echo $row['AName']; ?></a></td>
                     </tr>
                 </table>
                 <?php }?>
@@ -192,7 +226,7 @@
 					?></span>
             	</p>
                 <p>
-                    Skin Implemented by <a href="http://ban-hammer.net" title="Q4's Website">Q4-Bi.</a> for <a href="http://facepunch.com/showthread.php?t=1231554" title="Offical Thread" target="_blank">ULX Global Ban (0.5)</a>.
+                    Skin Implemented by <a href="http://ban-hammer.net" title="Q4's Website">Q4-Bi.</a> for <a href="http://facepunch.com/showthread.php?t=1231554" title="Offical Thread" target="_blank">ULX Global Ban (0.6)</a> v1.2
                	</p>
 			</div>
 		</footer>

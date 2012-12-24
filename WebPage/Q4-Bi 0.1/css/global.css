@@ -102,9 +102,10 @@
 
 #content-title
 {
+	background-image: url(http://t.ban-hammer.net/header.png);
+	background-image: no-repeat;
 	font-size: 22px;
-	color: #0079BF;
-	margin-top:10px;		
+	color: #0079BF;		
 }
 #topic-title
 {
