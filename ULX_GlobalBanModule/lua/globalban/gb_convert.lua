@@ -10,9 +10,7 @@ function GB_ConvertBan(steamid, name, BanLength, Time, AdminName, AdminSteam, Re
 	local AddBanQuery = ULX_DB:query("INSERT INTO bans VALUES ('','"..steamid.."','"..GB_Escape(name).."','"..BanLength.."','"..Time.."','"..GB_Escape(AdminName).."','"..AdminSteam.."','"..GB_Escape(Reason).."','"..GB_SERVERID.."','"..MAdmin.."','"..MTime.."');");
 	AddBanQuery.onSuccess = function()
 	end
-	AddBanQuery.onError = function(err) 
-		print('[ULX GB] (ConvertBan Query) - Error: ', err);
-	end
+	AddBanQuery.onError = function(db, err) print('[ULX GB] (ConvertBan) - Error: ', err) end
 	AddBanQuery:start();
 	Bans = Bans + 1
 end

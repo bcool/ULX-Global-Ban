@@ -44,9 +44,7 @@ function ULib.addBan( steamid, time, reason, name, admin )
 			GB_InsertBan(steamid, name, BanLength, AdminName, AdminSteam, reason)
 		end
 	end
-	BanStatus.onError = function(err) 
-		print('[ULX GB] (BanStatus) - Error: ', err)
-	end
+	BanStatus.onError = function(db, err) print('[ULX GB] (BanStatus) - Error: ', err) end
 	BanStatus:wait()
 	BanStatus:start()
 	
@@ -60,9 +58,7 @@ function GB_InsertBan(steamid, name, BanLength, AdminName, AdminSteam,reason)
 	AddBanQuery.onSuccess = function()
 		print("[ULX GB] - Ban Added!");
 	end
-	AddBanQuery.onError = function(err) 
-		print('[ULX GB] (AddBanQuery) - Error: ', err);
-	end
+	AddBanQuery.onError = function(db, err) print('[ULX GB] (AddBanQuery) - Error: ', err) end
 	AddBanQuery:start()
 
 	-- Regardless of outcome Kick player From Server
@@ -75,9 +71,7 @@ function GB_ModifyBan(BanLength, reason, time, AdminName, steamid)
 	UpdateBanQuery.onSuccess = function()
 		print("[ULX GB] - Ban Modified!");
 	end
-	UpdateBanQuery.onError = function(err) 
-		print('[ULX GB] (UpdateBanQuery) - Error: ', err);
-	end
+	UpdateBanQuery.onError = function(db, err) print('[ULX GB] (UpdateBanQuery) - Error: ', err) end
 	UpdateBanQuery:start()
 end
 
@@ -89,9 +83,7 @@ function ULib.unban( steamid )
 	UnBanQuery.onSuccess = function()
 		print("[ULX GB] - Ban Removed!");
 	end
-	UnBanQuery.onError = function(err) 
-		print('[ULX GB] (UnBanQuery) - Error: ', err);
-	end
+	UnBanQuery.onError = function(db, err) print('[ULX GB] (UnBanQuery) - Error: ', err) end
 	UnBanQuery:start()
 	
 	--Possible Glitch Fix, Just Incase
@@ -128,9 +120,7 @@ function ULib.refreshBans()
 			xgui.addData( {}, "bans", t ) -- This will error out on startup (Most Times, GMod 13's Addon Loading is fucked), but that's fine, all ban data gets loaded already
 		end
 	end
-	BanList.onError = function(err) 
-		print('[ULX GB] (BanList) - Error: ', err);
-	end
+	BanList.onError = function(db, err) print('[ULX GB] (BanList) - Error: ', err) end
 	BanList:start()
 	
 end

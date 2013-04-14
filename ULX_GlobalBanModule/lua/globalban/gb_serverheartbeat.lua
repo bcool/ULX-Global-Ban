@@ -28,7 +28,7 @@ function GB_QueryDatabaseForServer()
 			GB_InsertNewServer()
 		end 
 	end
-	HeartbeatQuery.onError = function() print ('[ULX GB] (HeartbeatQuery) - Error: ',HeartbeatQuery.error()) end
+	HeartbeatQuery.onError = function(db, err) print('[ULX GB] (HeartbeatQuery) - Error: ', err) end
 	HeartbeatQuery:start()
 	
 end
@@ -41,9 +41,7 @@ function GB_UpdateServerName()
 	UpdateName.onSuccess = function()
 		print("[ULX GB] - Updated HostName Successfully!");
 	end
-	UpdateName.onError = function(err)
-		print('[ULX GB] (UpdateName) - Error: ', err);
-	end
+	UpdateName.onError = function(db, err) print('[ULX GB] (UpdateName) - Error: ', err) end
 	UpdateName:start()
 	
 end
@@ -59,7 +57,7 @@ function GB_InsertNewServer()
 		print("[ULX GB] - Inserted New Server!");
 		GB_QueryDatabaseForServer()
 	end
-	NewServer.onError = function(err)
+	NewServer.onError = function(db, err)
 		print('[ULX GB] (NewServer) - Error: ', err);
 		GB_QueryDatabaseForServer()
 	end

@@ -32,6 +32,7 @@ function connectToDatabase()
 	print('[ULX GB] - Connecting to Database!')
 	
 	ULX_DB.onConnected = afterConnected
+	ULX_DB.onConnectionFailed = function(db, msg) print("[ULX GB] connectToDatabase") print(msg) end
 	ULX_DB:connect()
 end
 
