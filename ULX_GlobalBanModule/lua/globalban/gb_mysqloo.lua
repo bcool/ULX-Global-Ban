@@ -8,9 +8,6 @@ require( 'mysqloo' )
 
 //Include Globals
 include('gb_config.lua')
-if (GB_UseGateKeeper == true) then
-	include('gb_gatekeeper.lua')
-end
 
 //Setup MySQLOO Connections
 ULX_DB = mysqloo.connect(GB_DATABASE_HOST, GB_DATABASE_USERNAME, GB_DATABASE_PASSWORD, GB_DATABASE_NAME, GB_DATABASE_PORT)
@@ -20,11 +17,15 @@ include('gb_serverheartbeat.lua');
 function afterConnected(database)
 	print('[ULX GB] - Database Connection Successful ' )
 	
-	--Dam ULib Fails when inclduing this anywhere else...
-	include('globalban/gb_banmanagement.lua')
-	
 	--Check Wether or not a server exists in the Database
 	GB_QueryDatabaseForServer()
+	
+	--Dam ULib Fails when inclduing this anywhere else...
+	if (GB_Convert == true) then
+		include('globalban/gb_convert.lua')
+	else
+		include('globalban/gb_banmanagement.lua')
+	end
 end
 
 function connectToDatabase()

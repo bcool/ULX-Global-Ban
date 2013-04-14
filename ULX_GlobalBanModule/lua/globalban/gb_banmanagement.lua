@@ -31,7 +31,6 @@ function ULib.addBan( steamid, time, reason, name, admin )
 		AdminSteam = admin:SteamID()
 	end
 	
-	local Banned = 0;
 	--Are they already banned?
 	local BanStatus = ULX_DB:query("SELECT BanID, Length FROM bans WHERE OSteamiD = '"..steamid.."';")
 	BanStatus.onSuccess = function() 
@@ -117,7 +116,7 @@ function ULib.refreshBans()
 		local data = BanList:getData()
 		for i = 1, #data do
 			table.insert( ULib.bans, tonumber(data[i]['OSteamID']) )
-			ULib.bans[data[i]['OSteamID']] = { unban = tonumber(data[i]['Length']), admin = data[i]['AName'], reason = data[i]['Reason'], name = data[i]['OName'], time = tonumber(data[i]['Time']), modified_admin = data[i]['MAdmin'], modified_time = data[i]['MTime'] }
+			ULib.bans[data[i]['OSteamID']] = { unban = tonumber(data[i]['Length']), admin = data[i]['AName'], reason = data[i]['Reason'], name = data[i]['OName'], time = tonumber(data[i]['Time']), modified_admin = data[i]['MAdmin'], modified_time = tonumber(data[i]['MTime']) }
 			--^^ ULX Ban Info
 			---------------------------------
 			for k, v in pairs( ULib.bans ) do
@@ -140,64 +139,46 @@ ULib.refreshBans()
 
 
 //See if a player is banned or not and display time left.
-function GB_PlayerAuthed( ply, stid, unid )
+function GB_PlayerAuthed( ComID, IP, RealPass, ClientPass, PlayerNick )
 	-- Query Bans In Descending order of banid and LIMIT 1 to obtain the latest ban
-	print("[ULX GB] AUTHING PLAYER: " .. ply:Nick())
-	local AuthQuery = ULX_DB:query("SELECT BanID, Length FROM bans WHERE OSteamiD = '"..stid.."' ORDER BY BanID DESC LIMIT 1");
-	AuthQuery.onSuccess = function() 
-		local data = AuthQuery:getData()
-		local row = data[1]
-		if (#AuthQuery:getData() == 1) then
-			local bantime = tonumber(row['Length'])
-			if bantime >= os.time() then
-				local timeLeft = bantime - os.time();
-				local Minutes = math.floor(timeLeft / 60);
-				local Seconds = timeLeft - (Minutes * 60);
-				local Hours = math.floor(Minutes / 60);
-				local Minutes = Minutes - (Hours * 60);
-				local Days = math.floor(Hours / 24);
-				local Hours = Hours - (Days * 24);
+	local SteamID = GB_ComIDtoSteamID(ComID)
+	print("[ULX GB] AUTHING PLAYER: " .. PlayerNick .. ' WITH SteamID: ' .. SteamID)
+	if ULib.bans[SteamID] then
+		print('Banned')
+		local BanInfo = ULib.bans[SteamID]
+		local bantime = BanInfo.unban
+		if bantime >= os.time() then
+			local timeLeft = bantime - os.time();
+			local Minutes = math.floor(timeLeft / 60);
+			local Seconds = timeLeft - (Minutes * 60);
+			local Hours = math.floor(Minutes / 60);
+			local Minutes = Minutes - (Hours * 60);
+			local Days = math.floor(Hours / 24);
+			local Hours = Hours - (Days * 24);
 				
-				if (Minutes == 0 && Hours == 0 && Days == 0) then
-					ply:Kick("Banned. Lifted In: " .. Seconds + 1 .. " Seconds");
-				elseif (Hours == 0 && Days == 0) then
-					ply:Kick("Banned. Lifted In: " .. Minutes + 1 .. " Minutes");
-				elseif (Days == 0) then
-					ply:Kick("Banned. Lifted In: " .. Hours + 1 .. " Hours");
-				else
-					ply:Kick("Banned. Lifted In: " .. Days + 1 .. " Days");
-				end
+			if (Minutes == 0 && Hours == 0 && Days == 0) then
+				return false, "Banned. Lifted In: " .. Seconds + 1 .. " Seconds";
+			elseif (Hours == 0 && Days == 0) then
+				return false, "Banned. Lifted In: " .. Minutes + 1 .. " Minutes";
+			elseif (Days == 0) then
+				return false, "Banned. Lifted In: " .. Hours + 1 .. " Hours";
+			else
+				return false, "Banned. Lifted In: " .. Days + 1 .. " Days";
 			end
-			if bantime == 0 then
-				ply:Kick(GB_PermaMessage);
-			end
-			if (bantime <= os.time() && !bantime == 0) then
-				print("[ULX GB] - Removing expired bans!");
-				ULib.unban(stid);
-			end
-		else
-			print("[ULX GB] - User has no active bans");
 		end
+		if bantime == 0 then
+			return false, GB_PermaMessage;
+		end
+		if (bantime <= os.time() && !bantime == 0) then
+			print("[ULX GB] - Removing expired bans!");
+			ULib.unban(SteamID);
+		end
+	else
+		print("[ULX GB] - User has no active bans");
 	end
-	AuthQuery.onError = function(err) 
-		print('[ULX GB] (AuthQuery) - Error: ', err);
-	end
-	AuthQuery:start()
 end
-
-//If they don't want to use GateKeeper don't force them!
-if (GB_UseGateKeeper == false) then
-	hook.Add( "PlayerAuthed", "playerauthed", GB_PlayerAuthed )
-end
+hook.Add( "CheckPassword", "CheckPassword_GB", GB_PlayerAuthed )
 
 
-//Timer\\
-if (GB_RefreshTimer == true) then
-	timer.Create( "GB_RefreshTimer", GB_RefreshTime, 0, function() ULib.refreshBans() end)
-end
-
-
-
-
-
-
+// Timer
+timer.Create( "GB_RefreshTimer", GB_RefreshTime, 0, function() ULib.refreshBans() end)

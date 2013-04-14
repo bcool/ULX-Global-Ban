@@ -9,17 +9,16 @@
 --For Best performance use a local database or under 5ms
 GB_DATABASE_HOST 		= '127.0.0.1';
 GB_DATABASE_PORT 		= 3306;
-GB_DATABASE_NAME 		= 'ulx_ban';
+GB_DATABASE_NAME 		= 'ulx_gb';
 GB_DATABASE_USERNAME 	= 'root';
 GB_DATABASE_PASSWORD 	= '';
 
---Use the GateKeeper Module?
---Blocks people who are banned before they even enter the server!
---Requires GateKeeper Module...
-GB_UseGateKeeper 		= false; -- false = No | true = Yes (DEF=false) (Experimental Doesn't work Yet)
-
 --All Permanent Bans: Message you want to display to the permamently banned users who try to connect?
 GB_PermaMessage			= "Permbanned, Skit!";
+
+--Convert all Existing ULX Bans to ULXGlobalBan Database? (First Use Only, once done please set to false and restart server!)
+--Please note the converter does not always function when not all the ban data is present for that player! So please make a backup and run through the ban list to make sure that the players are there!
+GB_Convert = false;
 
 --Should we use a timer to Refresh the ban list?
 --How long should the refresh timer be? || (Each Ban / UnBan / Modification - Refreshes the BanList anyway)
