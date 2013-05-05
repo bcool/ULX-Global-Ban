@@ -57,6 +57,7 @@ function GB_InsertBan(steamid, name, BanLength, AdminName, AdminSteam,reason)
 	local AddBanQuery = ULX_DB:query("INSERT INTO bans VALUES ('','"..steamid.."','"..GB_Escape(name).."','"..BanLength.."','"..os.time().."','"..GB_Escape(AdminName).."','"..AdminSteam.."','"..GB_Escape(reason).."','"..GB_SERVERID.."','','"..os.time().."');");
 	AddBanQuery.onSuccess = function()
 		print("[ULX GB] - Ban Added!");
+		ULib.bans[steamid] = { unban = tonumber(BanLength), admin = AdminName, reason = '', name = name, time = tonumber(os.time()), modified_admin = '', modified_time = tonumber(0) };
 	end
 	AddBanQuery.onError = function(db, err) print('[ULX GB] (AddBanQuery) - Error: ', err) end
 	AddBanQuery:start()
@@ -70,6 +71,7 @@ function GB_ModifyBan(BanLength, reason, time, AdminName, steamid)
 	local UpdateBanQuery = ULX_DB:query("UPDATE bans SET Length='".. BanLength .."', Reason='".. reason .."', MTime='".. time .."', MAdmin='".. GB_Escape(AdminName) .."' WHERE OSteamID='".. steamid .."';");
 	UpdateBanQuery.onSuccess = function()
 		print("[ULX GB] - Ban Modified!");
+		ULib.bans[steamid] = { unban = tonumber(BanLength), admin = AdminName, reason = reason, modified_admin = GB_Escape(AdminName), modified_time = tonumber(time) };
 	end
 	UpdateBanQuery.onError = function(db, err) print('[ULX GB] (UpdateBanQuery) - Error: ', err) end
 	UpdateBanQuery:start()
@@ -82,6 +84,7 @@ function ULib.unban( steamid )
 	local UnBanQuery = ULX_DB:query("DELETE FROM bans WHERE OSteamID='"..steamid.."'");
 	UnBanQuery.onSuccess = function()
 		print("[ULX GB] - Ban Removed!");
+		ULib.bans[steamid] = nil;
 	end
 	UnBanQuery.onError = function(db, err) print('[ULX GB] (UnBanQuery) - Error: ', err) end
 	UnBanQuery:start()
