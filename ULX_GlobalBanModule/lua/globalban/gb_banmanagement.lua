@@ -26,7 +26,7 @@ function ULib.addBan( steamid, time, reason, name, admin )
 	--Setup Admin Information
 	local AdminName = "CONSOLE";
 	local AdminSteam = "CONSOLE";
-	if admin:IsPlayer() then
+	if admin != nil && admin:IsPlayer() then
 		AdminName = admin:Nick()
 		AdminSteam = admin:SteamID()
 	end
