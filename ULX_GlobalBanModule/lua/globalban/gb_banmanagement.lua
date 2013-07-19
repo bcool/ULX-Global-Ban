@@ -12,7 +12,9 @@ function ULib.addBan( steamid, time, reason, name, admin )
 	
 	-- No Name!? Insert a false one
 	if (name == nil) then
-		name = "John Doe"
+		if GB_NoSteamName == true then
+			name = GB_BanName
+		end
 	end
 	
 	-- Get ban Length and add it os.time
@@ -38,7 +40,10 @@ function ULib.addBan( steamid, time, reason, name, admin )
 		local row = data[1]
 		PrintTable(BanStatus:getData())
 		if (#BanStatus:getData() >= 1) then
-			GB_ModifyBan(BanLength, reason, time, AdminName, steamid)
+			if name == GB_BanName then
+				name = nil
+			end
+			GB_ModifyBan(name, BanLength, reason, time, AdminName, steamid)
 		end
 		if (#BanStatus:getData() == 0) then
 			GB_InsertBan(steamid, name, BanLength, AdminName, AdminSteam, reason)
@@ -52,12 +57,21 @@ function ULib.addBan( steamid, time, reason, name, admin )
 	ULib.refreshBans()
 end
 
-function GB_InsertBan(steamid, name, BanLength, AdminName, AdminSteam,reason)
+function GB_InsertBan(steamid, name, BanLength, AdminName, AdminSteam, reason)
 	--Insert Ban
-	local AddBanQuery = ULX_DB:query("INSERT INTO bans VALUES ('','"..steamid.."','"..GB_Escape(name).."','"..BanLength.."','"..os.time().."','"..GB_Escape(AdminName).."','"..AdminSteam.."','"..GB_Escape(reason).."','"..GB_SERVERID.."','','"..os.time().."');");
+	if name == nil then
+		local AddBanQuery = ULX_DB:query("INSERT INTO bans VALUES ('','"..steamid.."','"..GB_Escape(name).."','"..BanLength.."','"..os.time().."','"..GB_Escape(AdminName).."','"..AdminSteam.."','"..GB_Escape(reason).."','"..GB_SERVERID.."','','"..os.time().."');");
+	else
+		local AddBanQuery = ULX_DB:query("INSERT INTO bans VALUES ('','"..steamid.."','"..nil.."','"..BanLength.."','"..os.time().."','"..GB_Escape(AdminName).."','"..AdminSteam.."','"..GB_Escape(reason).."','"..GB_SERVERID.."','','"..os.time().."');");
+	end
+	
 	AddBanQuery.onSuccess = function()
 		print("[ULX GB] - Ban Added!");
-		ULib.bans[steamid] = { unban = tonumber(BanLength), admin = AdminName, reason = '', name = name, time = tonumber(os.time()), modified_admin = '', modified_time = tonumber(0) };
+		if name == nil then
+			ULib.bans[steamid] = { unban = tonumber(BanLength), admin = AdminName, reason = reason, time = tonumber(os.time()), modified_admin = '', modified_time = tonumber(0) };
+		else
+			ULib.bans[steamid] = { unban = tonumber(BanLength), admin = AdminName, reason = reason,name = name, time = tonumber(os.time()), modified_admin = '', modified_time = tonumber(0) };
+		end
 	end
 	AddBanQuery.onError = function(db, err) print('[ULX GB] (AddBanQuery) - Error: ', err) end
 	AddBanQuery:start()
@@ -66,12 +80,16 @@ function GB_InsertBan(steamid, name, BanLength, AdminName, AdminSteam,reason)
 	RunConsoleCommand('kickid',steamid,"You've been banned from the server.");
 end
 
-function GB_ModifyBan(BanLength, reason, time, AdminName, steamid)
+function GB_ModifyBan(name, BanLength, reason, time, AdminName, steamid)
 	--Send ban update to the Database
-	local UpdateBanQuery = ULX_DB:query("UPDATE bans SET Length='".. BanLength .."', Reason='".. reason .."', MTime='".. time .."', MAdmin='".. GB_Escape(AdminName) .."' WHERE OSteamID='".. steamid .."';");
+	local UpdateBanQuery = ULX_DB:query("UPDATE bans SET OName='".. name .."', Length='".. BanLength .."', Reason='".. reason .."', MTime='".. time .."', MAdmin='".. GB_Escape(AdminName) .."' WHERE OSteamID='".. steamid .."';");
 	UpdateBanQuery.onSuccess = function()
 		print("[ULX GB] - Ban Modified!");
-		ULib.bans[steamid] = { unban = tonumber(BanLength), admin = AdminName, reason = reason, modified_admin = GB_Escape(AdminName), modified_time = tonumber(time) };
+		if name == nil then
+			ULib.bans[steamid] = { unban = tonumber(BanLength), admin = AdminName, reason = reason, modified_admin = GB_Escape(AdminName), modified_time = tonumber(time) };
+		else
+			ULib.bans[steamid] = { unban = tonumber(BanLength), name = name, admin = AdminName, reason = reason, modified_admin = GB_Escape(AdminName), modified_time = tonumber(time) };
+		end
 	end
 	UpdateBanQuery.onError = function(db, err) print('[ULX GB] (UpdateBanQuery) - Error: ', err) end
 	UpdateBanQuery:start()
@@ -104,14 +122,17 @@ function ULib.refreshBans()
 	ULib.bans = nil
 	ULib.bans = {}
 	xgui.ulxbans = {}
-	
+
 	local BanList = ULX_DB:query("SELECT * FROM bans ORDER BY BanID DESC")
 	BanList:wait()
 	BanList.onSuccess = function()
 		local data = BanList:getData()
 		for i = 1, #data do
-			table.insert( ULib.bans, tonumber(data[i]['OSteamID']) )
-			ULib.bans[data[i]['OSteamID']] = { unban = tonumber(data[i]['Length']), admin = data[i]['AName'], reason = data[i]['Reason'], name = data[i]['OName'], time = tonumber(data[i]['Time']), modified_admin = data[i]['MAdmin'], modified_time = tonumber(data[i]['MTime']) }
+			if data[i]['OName'] != nil then
+				table.insert( ULib.bans, tonumber(data[i]['OSteamID']) )ULib.bans[data[i]['OSteamID']] = { unban = tonumber(data[i]['Length']), admin = data[i]['AName'], reason = data[i]['Reason'], name = data[i]['OName'], time = tonumber(data[i]['Time']), modified_admin = data[i]['MAdmin'], modified_time = tonumber(data[i]['MTime']) }
+			else
+				table.insert( ULib.bans, tonumber(data[i]['OSteamID']) )ULib.bans[data[i]['OSteamID']] = { unban = tonumber(data[i]['Length']), admin = data[i]['AName'], reason = data[i]['Reason'], time = tonumber(data[i]['Time']), modified_admin = data[i]['MAdmin'], modified_time = tonumber(data[i]['MTime']) }
+			end
 			--^^ ULX Ban Info
 			---------------------------------
 			for k, v in pairs( ULib.bans ) do
@@ -122,10 +143,14 @@ function ULib.refreshBans()
 			t[data[i]['OSteamID']] = ULib.bans[data[i]['OSteamID']]
 			xgui.addData( {}, "bans", t ) -- This will error out on startup (Most Times, GMod 13's Addon Loading is fucked), but that's fine, all ban data gets loaded already
 		end
+			
+		if GB_UsageStats then
+			GB_SendUsageStats(#data);
+		end
 	end
 	BanList.onError = function(db, err) print('[ULX GB] (BanList) - Error: ', err) end
 	BanList:start()
-	
+
 end
 //Refresh on Script Load -- Otherwise has issues
 ULib.refreshBans()

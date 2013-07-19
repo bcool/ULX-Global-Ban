@@ -16,6 +16,13 @@ GB_DATABASE_PASSWORD 	= '';
 --All Permanent Bans: Message you want to display to the permamently banned users who try to connect?
 GB_PermaMessage			= "Permbanned, Skit!";
 
+--If the banner does not supply a name use a fake one instead?
+GB_NoSteamName = false;
+GB_BanName = "John Doe";
+
+--Report Limited Addon Usage data IP,Port,Amount of Bans.
+GB_UsageStats = true;
+
 --Convert all Existing ULX Bans to ULXGlobalBan Database? (First Use Only, once done please set to false and restart server!)
 --Please note the converter does not always function when not all the ban data is present for that player! So please make a backup and run through the ban list to make sure that the players are there!
 GB_Convert = false;

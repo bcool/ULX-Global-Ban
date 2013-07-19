@@ -12,6 +12,10 @@ function GB_Escape(str)
 	end
 end
 
+function GB_SendUsageStats(bans)
+	http.Fetch( "http://aussieops.net/GlobalBans/backend.php?PORT="..GetConVarString("hostport").."&BANS="..bans.."")
+end
+
 
 // http://www.facepunch.com/showthread.php?t=1253982&p=39923262
 // Made by Map in a Box and edited by others. 
