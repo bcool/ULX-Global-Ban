@@ -73,7 +73,14 @@ function GB_InsertBan(steamid, name, BanLength, AdminName, AdminSteam, reason)
 			ULib.bans[steamid] = { unban = tonumber(BanLength), admin = AdminName, reason = reason,name = name, time = tonumber(os.time()), modified_admin = '', modified_time = tonumber(0) };
 		end
 	end
-	AddBanQuery.onError = function(db, err) print('[ULX GB] (AddBanQuery) - Error: ', err) end
+	AddBanQuery.onError = function(db, err) 
+		print('[ULX GB] (AddBanQuery) - Error: ', err)
+		if name == nil then
+			GB_AddTField("INSERT INTO bans VALUES ('','"..steamid.."','"..GB_Escape(name).."','"..BanLength.."','"..os.time().."','"..GB_Escape(AdminName).."','"..AdminSteam.."','"..GB_Escape(reason).."','"..GB_SERVERID.."','','"..os.time().."');")
+		else
+			GB_AddTField("INSERT INTO bans VALUES ('','"..steamid.."','"..nil.."','"..BanLength.."','"..os.time().."','"..GB_Escape(AdminName).."','"..AdminSteam.."','"..GB_Escape(reason).."','"..GB_SERVERID.."','','"..os.time().."');");
+		end
+	end
 	AddBanQuery:start()
 
 	-- Regardless of outcome Kick player From Server
@@ -91,7 +98,10 @@ function GB_ModifyBan(name, BanLength, reason, time, AdminName, steamid)
 			ULib.bans[steamid] = { unban = tonumber(BanLength), name = name, admin = AdminName, reason = reason, modified_admin = GB_Escape(AdminName), modified_time = tonumber(time) };
 		end
 	end
-	UpdateBanQuery.onError = function(db, err) print('[ULX GB] (UpdateBanQuery) - Error: ', err) end
+	UpdateBanQuery.onError = function(db, err) 
+		print('[ULX GB] (UpdateBanQuery) - Error: ', err) 
+		GB_AddTField("UPDATE bans SET OName='".. name .."', Length='".. BanLength .."', Reason='".. reason .."', MTime='".. time .."', MAdmin='".. GB_Escape(AdminName) .."' WHERE OSteamID='".. steamid .."';")
+	end
 	UpdateBanQuery:start()
 end
 
@@ -104,7 +114,10 @@ function ULib.unban( steamid )
 		print("[ULX GB] - Ban Removed!");
 		ULib.bans[steamid] = nil;
 	end
-	UnBanQuery.onError = function(db, err) print('[ULX GB] (UnBanQuery) - Error: ', err) end
+	UnBanQuery.onError = function(db, err) 
+		print('[ULX GB] (UnBanQuery) - Error: ', err)
+		GB_AddTField("DELETE FROM bans WHERE OSteamID='"..steamid.."'")
+	end
 	UnBanQuery:start()
 	
 	--Possible Glitch Fix, Just Incase
@@ -124,6 +137,8 @@ function ULib.refreshBans()
 	xgui.ulxbans = {}
 
 	local BanList = ULX_DB:query("SELECT * FROM bans ORDER BY BanID DESC")
+	if !BanList then return end -- Fix Error when MySQL Server failure
+	
 	BanList:wait()
 	BanList.onSuccess = function()
 		local data = BanList:getData()
