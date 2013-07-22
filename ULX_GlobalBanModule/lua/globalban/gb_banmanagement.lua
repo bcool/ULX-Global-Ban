@@ -59,12 +59,12 @@ end
 
 function GB_InsertBan(steamid, name, BanLength, AdminName, AdminSteam, reason)
 	--Insert Ban
+	local String = "INSERT INTO bans VALUES ('','"..steamid.."','"..GB_Escape(name).."','"..BanLength.."','"..os.time().."','"..GB_Escape(AdminName).."','"..AdminSteam.."','"..GB_Escape(reason).."','"..GB_SERVERID.."','','"..os.time().."');"
 	if name == nil then
-		local AddBanQuery = ULX_DB:query("INSERT INTO bans VALUES ('','"..steamid.."','"..GB_Escape(name).."','"..BanLength.."','"..os.time().."','"..GB_Escape(AdminName).."','"..AdminSteam.."','"..GB_Escape(reason).."','"..GB_SERVERID.."','','"..os.time().."');");
-	else
-		local AddBanQuery = ULX_DB:query("INSERT INTO bans VALUES ('','"..steamid.."','"..nil.."','"..BanLength.."','"..os.time().."','"..GB_Escape(AdminName).."','"..AdminSteam.."','"..GB_Escape(reason).."','"..GB_SERVERID.."','','"..os.time().."');");
+		String = "INSERT INTO bans VALUES ('','"..steamid.."',NULL,'"..BanLength.."','"..os.time().."','"..GB_Escape(AdminName).."','"..AdminSteam.."','"..GB_Escape(reason).."','"..GB_SERVERID.."','','"..os.time().."');"
 	end
 	
+	local AddBanQuery = ULX_DB:query(String)
 	AddBanQuery.onSuccess = function()
 		print("[ULX GB] - Ban Added!");
 		if name == nil then
