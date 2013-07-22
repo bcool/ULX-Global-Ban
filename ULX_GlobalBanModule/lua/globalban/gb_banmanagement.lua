@@ -78,7 +78,7 @@ function GB_InsertBan(steamid, name, BanLength, AdminName, AdminSteam, reason)
 		if name == nil then
 			GB_AddTField("INSERT INTO bans VALUES ('','"..steamid.."','"..GB_Escape(name).."','"..BanLength.."','"..os.time().."','"..GB_Escape(AdminName).."','"..AdminSteam.."','"..GB_Escape(reason).."','"..GB_SERVERID.."','','"..os.time().."');")
 		else
-			GB_AddTField("INSERT INTO bans VALUES ('','"..steamid.."','"..nil.."','"..BanLength.."','"..os.time().."','"..GB_Escape(AdminName).."','"..AdminSteam.."','"..GB_Escape(reason).."','"..GB_SERVERID.."','','"..os.time().."');");
+			GB_AddTField("INSERT INTO bans VALUES ('','"..steamid.."',NULL,'"..BanLength.."','"..os.time().."','"..GB_Escape(AdminName).."','"..AdminSteam.."','"..GB_Escape(reason).."','"..GB_SERVERID.."','','"..os.time().."');");
 		end
 	end
 	AddBanQuery:start()
