@@ -17,15 +17,18 @@ function GB_QueryDatabaseForServer()
 	HeartbeatQuery.onSuccess = function()
 		local data = HeartbeatQuery:getData()
 		local row = data[1]
-		-- Query The Database to see if server exsits and retrieve the Server's ID 
-		if (#HeartbeatQuery:getData() == 1) then			
+		-- Query The Database to see if server exists and retrieve the Server's ID 
+		if (#HeartbeatQuery:getData() == 0) then			
+			-- If Database does not have IP and port create a new row and populate it accordingly
+			print("[ULX GB] - Server not present, creating...");
+			GB_InsertNewServer()
+		elseif (#HeartbeatQuery:getData() == 1) then
+			-- There should be only one entry
 			GB_SERVERID = tonumber(row['ServerID']);
 			GB_UpdateServerName();
 			print("[ULX GB] - ServerID Set To: ".. GB_SERVERID);
 		else
-			-- If Database does not have IP and port create a new row and populate it accordingly
-			print("[ULX GB] - Server not present, creating...");
-			GB_InsertNewServer()
+			print("[ULX GB] (UpdateName) - Error: Multiple entries found for IPAddress "..IPAddress.." and Port "..HostPort)
 		end 
 	end
 	HeartbeatQuery.onError = function(db, err) print('[ULX GB] (HeartbeatQuery) - Error: ', err) end
