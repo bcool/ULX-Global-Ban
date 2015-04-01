@@ -5,11 +5,24 @@
 //Global Value; can be used in any other supported scripts.
 GB_SERVERID = 0
 
+local function GetServerIP()
+        local hostip = GetConVarString( "hostip" )
+        hostip = tonumber( hostip )
+        
+        local ip = {}
+        ip[ 1 ] = bit.rshift( bit.band( hostip, 0xFF000000 ), 24 )
+        ip[ 2 ] = bit.rshift( bit.band( hostip, 0x00FF0000 ), 16 )
+        ip[ 3 ] = bit.rshift( bit.band( hostip, 0x0000FF00 ), 8 )
+        ip[ 4 ] = bit.band( hostip, 0x000000FF )
+        
+        return table.concat( ip, "." )
+end
+
 
 function GB_QueryDatabaseForServer()
 	--Gather Identification Infos
 	local HostName = GB_Escape(GetHostName());
-	local IPAddress = GetConVarString("ip");
+	local IPAddress = GetServerIP();
 	local HostPort = GetConVarString("hostport");
 	
 	-- Setting up the Query
@@ -52,7 +65,7 @@ end
 function GB_InsertNewServer()
 	--Gather Indentification Infos
 	local HostName = GB_Escape(GetHostName());
-	local IPAddress = GetConVarString("ip");
+	local IPAddress = GetServerIP();
 	local HostPort = GetConVarString("hostport");
 
 	local NewServer = ULX_DB:query("INSERT INTO servers VALUES ('','"..IPAddress.."','"..HostPort.."','"..HostName.."')");
