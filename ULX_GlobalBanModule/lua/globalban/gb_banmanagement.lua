@@ -89,7 +89,7 @@ end
 
 function GB_ModifyBan(name, BanLength, reason, time, AdminName, steamid)
 	--Send ban update to the Database
-	local UpdateBanQuery = ULX_DB:query("UPDATE bans SET OName='".. name .."', Length='".. BanLength .."', Reason='".. reason .."', MTime='".. time .."', MAdmin='".. GB_Escape(AdminName) .."' WHERE OSteamID='".. steamid .."';");
+	local UpdateBanQuery = ULX_DB:query("UPDATE bans SET OName='".. GB_Escape(name) .."', Length='".. BanLength .."', Reason='".. GB_Escape(reason) .."', MTime='".. time .."', MAdmin='".. GB_Escape(AdminName) .."' WHERE OSteamID='".. steamid .."';");
 	UpdateBanQuery.onSuccess = function()
 		print("[ULX GB] - Ban Modified!");
 		if name == nil then
@@ -100,7 +100,7 @@ function GB_ModifyBan(name, BanLength, reason, time, AdminName, steamid)
 	end
 	UpdateBanQuery.onError = function(db, err) 
 		print('[ULX GB] (UpdateBanQuery) - Error: ', err) 
-		GB_AddTField("UPDATE bans SET OName='".. name .."', Length='".. BanLength .."', Reason='".. reason .."', MTime='".. time .."', MAdmin='".. GB_Escape(AdminName) .."' WHERE OSteamID='".. steamid .."';")
+		GB_AddTField("UPDATE bans SET OName='".. GB_Escape(name) .."', Length='".. BanLength .."', Reason='".. GB_Escape(reason) .."', MTime='".. time .."', MAdmin='".. GB_Escape(AdminName) .."' WHERE OSteamID='".. steamid .."';")
 	end
 	UpdateBanQuery:start()
 end
