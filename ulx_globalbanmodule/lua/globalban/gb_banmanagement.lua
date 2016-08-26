@@ -202,7 +202,7 @@ function GB_PlayerAuthed( ComID, IP, RealPass, ClientPass, PlayerNick )
 		if bantime == 0 then
 			return false, GB_PermaMessage;
 		end
-		if (bantime <= os.time() && !bantime == 0) then
+		if (bantime <= os.time() && bantime != 0) then
 			print("[ULX GB] - Removing expired bans!");
 			ULib.unban(SteamID);
 		end
