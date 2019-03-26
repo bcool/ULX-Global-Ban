@@ -9,9 +9,9 @@
 --For Best performance use a local database or under 5ms
 GB_DATABASE_HOST 		= '127.0.0.1';
 GB_DATABASE_PORT 		= 3306;
-GB_DATABASE_NAME 		= 'ulx_gb';
-GB_DATABASE_USERNAME 	= 'root';
-GB_DATABASE_PASSWORD 	= '';
+GB_DATABASE_NAME 		= 'gmod';
+GB_DATABASE_USERNAME 	= 'gmod';
+GB_DATABASE_PASSWORD 	= 'mysqlTest!@123';
 
 --All Permanent Bans: Message you want to display to the permamently banned users who try to connect?
 GB_PermaMessage			= "Permbanned, Skit!";
@@ -21,7 +21,7 @@ GB_NoSteamName = false;
 GB_BanName = "John Doe";
 
 --Report Limited Addon Usage data IP,Port,Amount of Bans.
-GB_UsageStats = true;
+GB_UsageStats = false;
 
 --Convert all Existing ULX Bans to ULXGlobalBan Database? (First Use Only, once done please set to false and restart server!)
 --Please note the converter does not always function when not all the ban data is present for that player! So please make a backup and run through the ban list to make sure that the players are there!
