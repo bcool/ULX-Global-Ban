@@ -29,12 +29,13 @@
 	*/
 
 	// SourceQuery
-	require( __DIR__ . '/SourceQuery/SourceQuery.class.php');
+	require __DIR__ . '/SourceQuery/bootstrap.php';
+	use xPaw\SourceQuery\SourceQuery;
 	
 	// Database Settings
-	$Database_Host 		= "localhost";
-	$Database_Database 	= "ulxbans";
-	$Database_Username 	= "root";
+	$Database_Host 		= "";
+	$Database_Database 	= "";
+	$Database_Username 	= "";
 	$Database_Password	= "";
 	
 	// Page Settings
@@ -129,16 +130,21 @@
 					{
 						
 						// Query Server
-						define( 'SQ_TIMEOUT', 1 );
-						define( 'SQ_ENGINE', SourceQuery :: SOURCE );
-						
-						$ServerQuery = new SourceQuery();
+						define( 'SQ_TIMEOUT',     3 );
+						define( 'SQ_ENGINE',      SourceQuery::SOURCE );
+
+						$ServerQuery = new SourceQuery( );
 						$ServerInfo    = Array();
 						$ServerPlayers = Array();
 						
 						try
 						{
-							$ServerQuery->Connect($PrintServers['IPAddress'], $PrintServers['Port'], SQ_TIMEOUT, SQ_ENGINE);
+
+							
+							$fullip = explode(":", $PrintServers['IPAddress']);
+							$ip = $fullip[0];
+							$port = $fullip[1];
+							$ServerQuery->Connect( $ip, $port, SQ_TIMEOUT, SQ_ENGINE );
 							$ServerInfo    = $ServerQuery->GetInfo();
 							$ServerPlayers = $ServerQuery->GetPlayers();
 						}
@@ -148,12 +154,11 @@
 						}
 					
 						$ServerQuery->Disconnect( );
-						
 						echo 
 						"
 							<tr>
 								<td><b>" . $PrintServers['ServerID'] . "</b></td>
-								<td><a href='steam://connect/" . $PrintServers['IPAddress'] . ":" . $PrintServers['Port'] . "'>" . $PrintServers['IPAddress'] . ":" . $PrintServers['Port'] . "</a></td>
+								<td><a href='steam://connect/" . $ip . ":" . $port . "'>" . $ip . ":" . $port . "</a></td>
 								<td>" . $PrintServers['HostName'] . "</td>
 								<td>" . htmlspecialchars($ServerInfo['ModDesc']) . "</td>
 								<td>" . htmlspecialchars($ServerInfo['Map']) . "</td>

@@ -6,6 +6,7 @@ INFO
 ==============
 Created out of necessity.
 Created by NigNog (Bcool) and Adobe Ninja.
+This Version has been fixed up by 1Day2Die
 
 FEATURES
 ==============
@@ -35,7 +36,15 @@ CHANGELOG
 
 INSTALLATION
 ==============
-*Requires MySQLOO
-TODO
+*Requires MySQLOO v9
+
+Create a new Database and Import the sql file.
+
+Upload the Webfiles to your webserver and configure the Database connection in the index.php
+
+Upload the ulx_globalbanmodule to your garrysmod/addons directory and edit "gb_config" to your liking.
+
+Everything should be running smooth!
+
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.

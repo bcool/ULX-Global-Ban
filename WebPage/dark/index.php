@@ -6,20 +6,23 @@
 	$start = $time;
 	
 	// Source server Query GET
-	require __DIR__ . '/SourceQuery/SourceQuery.class.php';
+	require __DIR__ . '/SourceQuery/bootstrap.php';
+	use xPaw\SourceQuery\SourceQuery;
 	//require_once ('SourceQuery/SourceQuery.class.php'); // If you get and error reguarding this line, comment out the line above and use this one :)
 	
 	// Config to your database - Edit this!
-	$dbhost		= '127.0.0.1';			// Server IP/Domain of where the datab-base resides.
-	$dbdatabase	= 'ulxbans';			// Data-base Name.
-	$dbuser		= 'root';				// Username.
+	$dbhost		= '172.0.0.1';			// Server IP/Domain of where the datab-base resides.
+	$dbdatabase	= '';			// Data-base Name.
+	$dbuser		= '';				// Username.
 	$dbpassword	= '';					// Password.
-	$webname	= 'Ban-Hammer.net'		// Title of Community/Server/Website/Domain, pick one.
+	$webname	= 'My Community'		// Title of Community/Server/Website/Domain, pick one.
 ?>
 <?php
 	// MySQL Connect/Query
-	$connection = mysql_connect($dbhost,$dbuser,$dbpassword);
-	if($connection){mysql_select_db($dbdatabase);}else{die("failed");}
+	$connection = new mysqli($dbhost, $dbuser, $dbpassword, $dbdatabase);
+	if ($connection->connect_error) {
+	die("DB Connection failed: " . $db->connect_error);
+	}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -30,24 +33,7 @@
 		<title><?php echo $webname ?> - Global Bans</title> 
 		<link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css">
 		<link rel="stylesheet" href="css/global.css">
-		<script type="text/javascript">
-		var currenttime = '<? print date("h:i:s a j M Y", time())?>'
-		var montharray=new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
-		var serverdate=new Date(currenttime)
-		function padlength(what){
-			var output=(what.toString().length==1)? "0"+what : what
-			return output
-		}
-		function displaytime(){
-			serverdate.setSeconds(serverdate.getSeconds()+1)
-			var timestring=padlength(serverdate.getHours())+":"+padlength(serverdate.getMinutes())+":"+padlength(serverdate.getSeconds())
-			var datestring=montharray[serverdate.getMonth()]+" "+padlength(serverdate.getDate())+", "+serverdate.getFullYear()
-			document.getElementById("servertime").innerHTML=datestring+" "+timestring
-		}
-			window.onload=function(){
-			setInterval("displaytime()", 1000)
-		}
-		</script>
+
     </head>
 	<body>
         <div class="container">
@@ -78,12 +64,14 @@
                 </table>
                 <?php 
 					$query ="SELECT * FROM servers";
-					$result = mysql_query($query);
-					while($row=mysql_fetch_assoc($result)){		
+					$result = $connection->query($query);
+					while($row=mysqli_fetch_assoc($result)){		
 				?>
                 <?php
-					$ip = $row['IPAddress'];
-					$port = $row['Port'];
+                	$fullip = explode(":", $row['IPAddress']);
+					$ip = $fullip[0];
+					$port = $fullip[1];
+
 
 					define( 'SQ_TIMEOUT',     1 );
 					define( 'SQ_ENGINE',      SourceQuery :: SOURCE );
@@ -124,7 +112,7 @@
                 	<p>&nbsp;</p>
              		<?php 
 						$query ="SELECT COUNT(BanID) FROM bans";
-						$result = mysql_fetch_array(mysql_query($query));
+						$result = mysqli_fetch_array($connection->query($query));
 						echo 'Bans List - ';
 						echo $result[0];
 						echo ' Bans and Counting';
@@ -151,8 +139,8 @@
                	</table>
                 	<?php 
 						$query ="SELECT * FROM servers, bans WHERE servers.ServerID = bans.ServerID ORDER BY BanID DESC";
-						$result = mysql_query($query);
-						while($row=mysql_fetch_assoc($result)){		
+						$result = $connection->query($query);
+						while($row=mysqli_fetch_assoc($result)){		
 					?>
               	<table width="100%" class="status" border="0">
                     <?php
@@ -178,7 +166,7 @@
                         <td width="185">
 							<?php  if ($row['Length'] == '0')
 								{
-									echo "<em>Not Applicable.</em>";	
+									echo "<em>Permanent</em>";	
 								}
 								elseif($row['Length'] < time())
 								{
@@ -226,7 +214,7 @@
 					?></span>
             	</p>
                 <p>
-                    Skin Implemented by <a href="http://ban-hammer.net" title="Q4's Website">Q4-Bi.</a> for <a href="http://facepunch.com/showthread.php?t=1231554" title="Offical Thread" target="_blank">ULX Global Ban (0.6)</a> v1.2
+                    Skin Implemented by <a href="http://ban-hammer.net" title="Q4's Website">Q4-Bi.</a> for <a href="http://facepunch.com/showthread.php?t=1231554" title="Offical Thread" target="_blank">ULX Global Ban (0.6)</a> v1.2 fixed up by 1Day2Die
                	</p>
 			</div>
 		</footer>
