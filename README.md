@@ -4,9 +4,9 @@ A Global Ban System designed to be used only with ULX & ULib Garry's Mod servers
 
 INFO
 ==============
-Created out of necessity.
-Created by NigNog (Bcool) and Adobe Ninja.
-This Version has been fixed up by 1Day2Die
+* Created out of necessity.
+* Created by NigNog (Bcool) and Adobe Ninja.
+* This Version has been fixed up by 1Day2Die
 
 FEATURES
 ==============
@@ -25,6 +25,7 @@ PLANED/TODO
 
 CHANGELOG
 ==============
+* [FIX] 	Made Operable again.
 * [ADD] 	Ban removal.
 * [ADD]		Ban Modification.
 * [ADD] 	Ban listing in the xgui menus.
