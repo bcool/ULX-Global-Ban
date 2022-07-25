@@ -1,6 +1,5 @@
 --ULX Global Ban
 --Adobe And NigNog
---Fixed by 1Day2Die
 ------------------
 include('globalban/gb_config.lua')
 ------------------
@@ -204,46 +203,50 @@ end
 ULib.refreshBans()
 
 
-//See if a player is banned or not and display time left.
-function GB_PlayerAuthed( ComID, IP, RealPass, ClientPass, PlayerNick )
-	-- Query Bans In Descending order of banid and LIMIT 1 to obtain the latest ban
-	local SteamID = GB_ComIDtoSteamID(ComID)
-	print("[ULX GB] AUTHING PLAYER: " .. PlayerNick .. ' WITH SteamID: ' .. SteamID)
-	if ULib.bans[SteamID] then
-		print('Banned')
-		local BanInfo = ULib.bans[SteamID]
-		local bantime = BanInfo.unban
-		if bantime >= os.time() then
-			local timeLeft = bantime - os.time();
-			local Minutes = math.floor(timeLeft / 60);
-			local Seconds = timeLeft - (Minutes * 60);
-			local Hours = math.floor(Minutes / 60);
-			local Minutes = Minutes - (Hours * 60);
-			local Days = math.floor(Hours / 24);
-			local Hours = Hours - (Days * 24);
+local banJoinMsg = [[
+===========YOU ARE BANNED===========
+By: %s
+Reason: %s
+Banned since: %s
+Time Left: %s]]
+local function checkBan( steamid64, ip, password, clpassword, name )
+    local steamid = GB_ComIDtoSteamID(steamid64)
+    local banData = ULib.bans[ steamid ]
+    print("[ULX GB] AUTHING PLAYER: " .. name .. ' WITH SteamID: ' .. steamid)
+    if not banData then return end -- Not banned
 
-			if (Minutes == 0 && Hours == 0 && Days == 0) then
-				return false, "Banned. Lifted In: " .. Seconds + 1 .. " Seconds";
-			elseif (Hours == 0 && Days == 0) then
-				return false, "Banned. Lifted In: " .. Minutes + 1 .. " Minutes";
-			elseif (Days == 0) then
-				return false, "Banned. Lifted In: " .. Hours + 1 .. " Hours";
-			else
-				return false, "Banned. Lifted In: " .. Days + 1 .. " Days";
-			end
-		end
-		if bantime == 0 then
-			return false, GB_PermaMessage;
-		end
-		if (bantime <= os.time() && bantime != 0) then
+    local admin = "Console"
+    if banData.admin and banData.admin ~= "" then
+        admin = banData.admin
+    end
+
+    local reason = "(None given)"
+    if banData.reason and banData.reason ~= "" then
+        reason = banData.reason
+    end
+
+    local timeban = "Unknown"
+    if banData.time > 0 then
+        timeban = os.date("%m/%d/%y %H:%M", timeban.time)
+    end
+
+    local unbanStr = nil
+    local unban = tonumber( banData.unban )
+    if unban and unban > 0 then
+        unbanStr = ULib.secondsToStringTime( unban - os.time() )
+    end
+
+    if reason or unbanStr then -- Only give this message if we have something useful to display
+        Msg(string.format("%s (%s)<%s> was kicked by ULib because they are on the ban list\n", name, steamid, ip))
+        return false, banJoinMsg:format( admin, reason, timeban, unbanStr or "(Permaban)" )
+    end
+	local bantime = BanInfo.unban
+    if (bantime <= os.time() && bantime != 0) then
 			print("[ULX GB] - Removing expired bans!");
 			ULib.unban(SteamID);
 		end
-	else
-		print("[ULX GB] - User has no active bans");
-	end
 end
-hook.Add( "CheckPassword", "CheckPassword_GB", GB_PlayerAuthed )
+hook.Add( "CheckPassword", "CheckPassword_GB", checkBan )
 
 
 // Timer
