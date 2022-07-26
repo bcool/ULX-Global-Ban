@@ -1,8 +1,9 @@
 --ULX Global Ban
 --Adobe And NigNog
+--Fixed by 1Day2Die
 ------------------
 
-// Terrible Escape Function
+-- Terrible Escape Function
 function GB_Escape(str)
 	if (str == nil) then
 		return "";
@@ -13,12 +14,12 @@ function GB_Escape(str)
 end
 
 function GB_SendUsageStats(bans)
-	http.Fetch( "http://aussieops.net/GlobalBans/backend.php?PORT="..GetConVarString("hostport").."&BANS="..bans.."")
+	-- returning 404
+	-- http.Fetch( "http://aussieops.net/GlobalBans/backend.php?PORT="..GetConVarString("hostport").."&BANS="..bans.."")
 end
 
-
-// http://www.facepunch.com/showthread.php?t=1253982&p=39923262
-// Made by Map in a Box and edited by others. 
+-- http://www.facepunch.com/showthread.php?t=1253982&p=39923262
+-- Made by Map in a Box and edited by others.
 function GB_ComIDtoSteamID(cid)
   local steam64=tonumber(cid:sub(2))
   local a = steam64 % 2 == 0 and 0 or 1
