@@ -21,7 +21,7 @@
 	// MySQL Connect/Query
 	$connection = new mysqli($dbhost, $dbuser, $dbpassword, $dbdatabase);
 	if ($connection->connect_error) {
-	die("DB Connection failed: " . $db->connect_error);
+	die("DB Connection failed: " . $connection->connect_error);
 	}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
